@@ -66,6 +66,7 @@ func main() {
 	csvOut.Write([]string{"Domain", "Type", "CNAME", "IP"})
 
 	counter := 0
+	// 接受输出并打印
 	for record := range dns.Records {
 		counter++
 		out := record.CSV()

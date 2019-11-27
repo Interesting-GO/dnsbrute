@@ -33,12 +33,13 @@ func Configure(domain, server string, rate, retry int) (err error) {
 	transmitRate = rate
 	retryLimit = retry
 
+	// 测试输入dns是否正常
 	if client, err = dns.DialTimeout("udp", server, timeout); err != nil {
 		return err
 	}
 
-	go send()
-	go receive()
+	go send()    //send 发送查询
+	go receive() // receive 接收 DNS 响应
 
 	return nil
 }
@@ -79,7 +80,7 @@ func send() {
 				log.Debug("retry", domain, request.SentCount)
 				Queries <- domain
 			})
-		case <-time.After(3 * timeout):
+		case <-time.After(3 * timeout): // 如果没有输入 就退出
 			log.Debug("no more queries")
 			close(noMoreQueries)
 			return
